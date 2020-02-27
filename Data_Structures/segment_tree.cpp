@@ -24,7 +24,7 @@ void update(int index, int value){
         segment_tree[index] = segment_tree[index*2+1]*segment_tree[index*2+2]; //CAMBIAR SEGUN OPERACION
         index = (index-1)/2;
     }
-    segment_tree[index] = segment_tree[index*2+1]*segment_tree[index*2+2]; //CAMBIAR SEGUN OPERACION
+    if (reserved) segment_tree[index] = segment_tree[index*2+1]*segment_tree[index*2+2]; //CAMBIAR SEGUN OPERACION
 }
 
 void build_segment_tree(int n){

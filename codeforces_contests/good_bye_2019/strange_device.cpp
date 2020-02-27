@@ -1,34 +1,28 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector <long long> numb;
+int a[505];
+
 int main(){
-    int n, k, index, value, c;
+    int n, k, pos, a_pos;
+    pair <int, int> ans1 = {-1, 0}, ans2 = {-1, 0};
     cin >> n >> k;
-    numb.assign(n,-1);
-    set <int> st;
-    for (int i = 0; i < k; ++i) {
-        st.insert(i);
-    }
-    c = k;
-    while (n--){
-        cout << "? ";
-        auto it = st.begin();
-        while (1) {
-            cout << *it+1 << " ";
-            it++;
-            if (it == st.end())break;
+    for (int j = 1; j <= k+1; ++j) {
+        cout << "?";
+        for (int i = 1; i <= k+1; ++i) {
+            if (i != j) cout << " " << i;
         }
         cout << "\n";
         cout << flush;
-        cin >> index >> value;
-        numb[index-1] = value;
-        st.erase(index-1);
-        st.insert(c);
-        c++;
+        cin >> pos >> a_pos;
+        if (ans1.first == -1 || ans1.first == a_pos) {
+            ans1.first = a_pos;
+            ans1.second++;
+        }else{
+            ans2.first = a_pos;
+            ans2.second++;
+        }
     }
-    for (int j = 0; j < n; ++j) {
-        cout << numb[j] << " ";
-    }
-    return 0;
+    if (ans1.first < ans2.first) cout << "! " << ans2.second << "\n";
+    else cout << "! " << ans1.second << "\n";
 }
