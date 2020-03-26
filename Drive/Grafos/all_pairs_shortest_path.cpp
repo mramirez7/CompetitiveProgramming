@@ -1,9 +1,8 @@
-//FALTA DETECTAR CICLOS NEGATIVOS
+//ACCEPTED
 #include <bits/stdc++.h>
 using namespace std;
 
 int dist[150][150];
-int dist2[150][150];
 
 int main(){
     int n, m, q, u, v, w, flag = 0;
@@ -19,33 +18,26 @@ int main(){
         }
         for (int k = 0; k < m; ++k) {
             cin >> u >> v >> w;
-            if (u==v && w > 0) continue;
-            dist[u][v] = w;
+            dist[u][v] = min(w, dist[u][v]);
         }
-        for (int l = 0; l < n; ++l) {
-            for (int i = 0; i < n; ++i) {
-                for (int j = 0; j < n; ++j) {
-                    dist[i][j] = min(dist[i][j], dist[i][l] + dist[l][j]);
-                }
-            }
-        }
-        /*
-        //ciclos negativos
-        for (int l = 0; l < n; ++l) {
-            for (int i = 0; i < n; ++i) {
-                for (int j = 0; j < n; ++j) {
-                    if (dist[j][j] < 0 && dist[l][j] != INT_MAX/2 && dist[j][i] != INT_MAX/2){
-                        dist[l][i] = -INT_MAX/2;
-                    }
-                }
-            }
-        }
-        */
+
+        for (int k = 0; k < n; ++k)
+            for (int i = 0; i < n; ++i)
+                for (int j = 0; j < n; ++j)
+                    if (dist[i][k] != INT_MAX/2 && dist[k][j] != INT_MAX/2)
+                        dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+        for (int k = 0; k < n; ++k)
+            for (int i = 0; i < n; ++i)
+                for (int j = 0; j < n; ++j)
+                    if (dist[i][k] != INT_MAX/2 && dist[k][j] != INT_MAX/2 && dist[k][k] < 0)
+                        dist[i][j] = -INT_MAX/2;
+
+
         for (int i1 = 0; i1 < q; ++i1) {
             cin >> u >> v;
             if (dist[u][v] == INT_MAX/2) cout << "Impossible\n";
             else if (dist[u][v] == -INT_MAX/2) cout << "-Infinity\n";
-            else cout << dist[u][v] << "\n";
+            else  cout << dist[u][v] << "\n";
         }
     }
 }

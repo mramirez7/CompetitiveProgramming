@@ -1,5 +1,28 @@
-//ACCEPTED
-//TAGS: EULER TOUR + SPARSE TABLE
+//BINARY LIFTING
+int st[20000][15]; //st[V][log2(V)]
+int p[20000]; //parent
+void st_generator(int d, vector<vector<int>>& st){ //se llama desde la raiz
+    st[d][0] = p[d];
+    for (int i = 1; i <= 15; i++){
+        st[d][i] = st[st[d][i-1]][i-1];
+    }
+    for (int j = 0; j < g[d].size(); ++j) {
+        if (g[d][j] != p[d])
+            st_generator(g[d][j], st, p);
+    }
+}
+
+int query(int v, int d){ //encuentra un ancestro a distancia d
+    if (!d) return v;
+    for (int i = 0; i <= 15; ++i) { //cambiar 15 por (log2(V))
+        if (d & (1 << i)){
+            return query(st2[v][i],d - (1<<i));
+        }
+    }
+}
+
+
+// EULER TOUR + SPARSE TABLE
 #include <bits/stdc++.h>
 using namespace std;
 

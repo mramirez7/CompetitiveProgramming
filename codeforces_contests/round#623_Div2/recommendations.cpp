@@ -1,11 +1,15 @@
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
 
 vector <int> a;
 vector <int> t;
-priority_queue <pair<int, int>> q;
+priority_queue <int> q;
+vector <pair<int, int>> vec;
 
 int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
     int n, aux;
     cin >> n;
     for (int i = 0; i < n; ++i) {
@@ -17,26 +21,26 @@ int main(){
         t.push_back(aux);
     }
     for (int j = 0; j < n; ++j) {
-        q.push({-a[j], t[j]});
+        vec.push_back({a[j], -t[j]});
     }
-    long long ans = 0;
-    int a_, a_last = -1, t_;
-    vector <int> vec;
-    while (q.size()){
-        a_ = -q.top().first; t_ = q.top().second; q.pop();
-        if (a_ == a_last){
-            vec.push_back(-t_);
-        }if (a_ != a_last || (vec.size() && !q.size())){
-            sort(vec.begin(), vec.end());
-            for (int i = 0; i < vec.size(); ++i) {
-                ans -= vec[i]*(i+1);
-                q.push({-a_last-i-1, -vec[i]});
-            }
-            if (vec.size()) q.push({-a_, t_});
-            if (a_last == -1 || !vec.size()) a_last = a_;
-            else a_last = -1;
-            vec.clear();
+    sort(vec.begin(), vec.end());
+    int pointer = 0;
+    int last  = vec[0].first;
+    long long sum_ = 0, ans = 0;
+    while (pointer != n){
+        if (vec[pointer].first == last){
+            q.push(-vec[pointer].second);
+            sum_ += -vec[pointer++].second;
+            continue;
         }
+        sum_ -= q.top(); q.pop();
+        ans += sum_;
+        if (q.size()) last++;
+        else last = vec[pointer].first;
+    }
+    while (q.size()){
+        sum_ -= q.top(); q.pop();
+        ans += sum_;
     }
     cout << ans << "\n";
 }
