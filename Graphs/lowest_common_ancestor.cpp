@@ -1,3 +1,7 @@
+typedef pair<int, int> ii;
+typedef vector <int> vi;
+typedef vector<vi> vvi;
+
 //BINARY LIFTING
 int st[20000][15]; //st[V][log2(V)]
 int p[20000]; //parent
@@ -26,24 +30,26 @@ int query(int v, int d){ //encuentra un ancestro a distancia d
 #include <bits/stdc++.h>
 using namespace std;
 
-vector <int> parent;
-vector <vector<int>> adj;
-vector <pair<int, int>> euler;
-vector <int> euler_first;
-vector <int> euler_last;
-vector <int> height;
-vector <pair<int, int>> sparseTable;
+vi par;
+vvi adj;
+vecotr <ii> euler;
+vi euler_f;
+vi euler_l;
+vi h, vis;
+vector <ii> sparseTable;
 int N;
 
-void dfs(int u, int h){
-    height[u] = h;
-    euler_first[u] = euler.size();
-    euler_last[u] = euler.size();
-    euler.push_back({h,u});
+void dfs(int u){
+    vis[u] = 1;
+    h[u] = h[par[u]]+1;
+    euler_f[u] = euler.size();
+    euler_l[u] = euler.size();
+    euler.push_back({h[u],u});
     for (int i = 0; i < adj[u].size(); ++i) {
-        dfs(adj[u][i], h+1);
+        if (vis[adj[u][i]]) continue;
+        dfs(adj[u][i]);
         euler_last[u] = euler.size();
-        euler.push_back({h, u});
+        euler.push_back({h[u], u});
     }
 }
 
@@ -71,7 +77,7 @@ void builldSparseTable(){
     }
 }
 
-int query(int i, int j){ //inclusive
+int query_(int i, int j){ //inclusive
     if (i>j) swap(i,j);
     int log_query = 31 - __builtin_clz(j-i+1);
     int largo_query = 1 << log_query;
@@ -79,42 +85,26 @@ int query(int i, int j){ //inclusive
     return sparseTable[N*log_query + j-largo_query+1].second;
 }
 
+int query(int u, int v) {
+    return query_(query(min(euler_first[u], euler_first[v]), max(euler_last[u], euler_last[v])));
+}
+
+
 
 int main(){
-    int t, n, m, u, root, q, q1, q2, case_n = 0;
-    cin >> t;
-    while (t--){
-        case_n++;
-        adj.clear();
-        euler.clear();
-        euler_first.clear();
-        euler_last.clear();
-        cin >> n;
-        euler_first.reserve(n);
-        euler_last.reserve(n);
-        height.reserve(n);
-        parent.assign(n, -1);
-        adj.assign(n, vector<int>());
-        for (int i = 0; i < n; ++i) {
-            cin >> m;
-            for (int j = 0; j < m; ++j) {
-                cin >> u; u--;
-                adj[i].push_back(u);
-                parent[u] = i;
-            }
-        }
-        root = 0;
-        while (parent[root] != -1) root = parent[root];
-        dfs(root, 0);
-        N = euler.size();
-        builldSparseTable();
-        cin >> q;
-        cout << "Case " << case_n <<":\n";
-        for (int k = 0; k < q; ++k) {
-            cin >> q1 >> q2;
-            q1--; q2--;
-            cout << 1+query(min(euler_first[q1], euler_first[q2]), max(euler_last[q1], euler_last[q2])) << "\n";
-        }
-    }
+    int t, n, m, u, root, q, q1, q2;
+    cin >> n;
+    euler_first.reserve(n);
+    euler_last.reserve(n);
+    h.reserve(n);
+    h[0] = -1; //cambiar por root
+    par.assign(n, -1);
+    par[0] = 0; //cambiar por root
+    adj.assign(n, vector<int>());
+    //leer grafo
+    dfs(0); //cambiar por root
+    N = euler.size();
+    builldSparseTable();
+    //query(v, u)
 }
 

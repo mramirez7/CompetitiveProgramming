@@ -6,9 +6,11 @@ typedef vector <int> vi;
 typedef vector<vi> vvi;
 
 int main(){
-    int t;
+    int t, a, b;
     cin >> t;
     while (t--){
-
+        cin >> a >> b;
+        if (a%b == 0) cout << "0\n" ;
+        else cout << a/b*b + b - a << "\n";
     }
 }
