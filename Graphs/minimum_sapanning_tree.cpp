@@ -3,6 +3,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+typedef pair<int, int> ii;
+typedef vector <int> vi;
+typedef vector<vi> vvi;
+typedef long long ll;
+
 int rep[10000]; //representantes
 int find(int x){
     if (rep[x] != x){
@@ -27,11 +32,11 @@ void union_(int x, int y){
 
 int main(){
     int n, m, u, v, w;
-    long long ans = 0;
+    ll ans = 0;
     cin >> n >> m;
     for (int i = 0; i < n; ++i)
         rep[i] =  i;
-    priority_queue <pair <int, pair <int, int>>> edges;
+    priority_queue <pair <int, ii>> edges;
     while (m--) {
         cin >> u >> v >> w;
         edges.push({-w,{--u,--v}});

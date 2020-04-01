@@ -31,7 +31,7 @@ int query(int v, int d){ //encuentra un ancestro a distancia d
 using namespace std;
 
 vi par;
-vvi adj;
+vvi g;
 vecotr <ii> euler;
 vi euler_f;
 vi euler_l;
@@ -45,9 +45,9 @@ void dfs(int u){
     euler_f[u] = euler.size();
     euler_l[u] = euler.size();
     euler.push_back({h[u],u});
-    for (int i = 0; i < adj[u].size(); ++i) {
-        if (vis[adj[u][i]]) continue;
-        dfs(adj[u][i]);
+    for (int i = 0; i < g[u].size(); ++i) {
+        if (vis[g[u][i]]) continue;
+        dfs(g[u][i]);
         euler_last[u] = euler.size();
         euler.push_back({h[u], u});
     }
@@ -100,7 +100,7 @@ int main(){
     h[0] = -1; //cambiar por root
     par.assign(n, -1);
     par[0] = 0; //cambiar por root
-    adj.assign(n, vector<int>());
+    g.assign(n, vector<int>());
     //leer grafo
     dfs(0); //cambiar por root
     N = euler.size();
